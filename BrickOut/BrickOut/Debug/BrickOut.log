@@ -1,0 +1,3 @@
+﻿  main.cpp
+C:\Users\MSI\Documents\GitHub\CppBrickOut\BrickOut\BrickOut\main.cpp(78,7): warning C4101: 'inputKey' :참조되지 않은 지역 변수입니다.
+  BrickOut.vcxproj -> C:\Users\MSI\Documents\GitHub\CppBrickOut\BrickOut\Debug\BrickOut.exe
