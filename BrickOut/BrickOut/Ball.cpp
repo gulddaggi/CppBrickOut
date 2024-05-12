@@ -77,6 +77,7 @@ void Ball::Move()
 	default:
 		break;
 	}
+
 	OverlapCheck();
 	OriginUpdate();
 }
@@ -171,6 +172,7 @@ void Ball::BlockReflectionCheck()
 		{
 			currentDirection = Direction::DOWNRIGHT;
 		}
+		DoubleReflectionCheck(originDirection);
 	}
 	// 오른쪽
 	else if (gameManager.frame[y][x + 1] == 2)
@@ -184,6 +186,7 @@ void Ball::BlockReflectionCheck()
 		{
 			currentDirection = Direction::DOWNLEFT;
 		}
+		DoubleReflectionCheck(originDirection);
 	}
 	// 위쪽
 	else if (gameManager.frame[y - 1][x] == 2)
@@ -197,6 +200,7 @@ void Ball::BlockReflectionCheck()
 		{
 			currentDirection = Direction::DOWNRIGHT;
 		}
+		DoubleReflectionCheck(originDirection);
 	}
 	// 아래쪽
 	else if (gameManager.frame[y + 1][x] == 2)
@@ -210,6 +214,7 @@ void Ball::BlockReflectionCheck()
 		{
 			currentDirection = Direction::UPLEFT;
 		}
+		DoubleReflectionCheck(originDirection);
 	}
 }
 
@@ -220,23 +225,93 @@ void Ball::OverlapCheck()
 		gameManager.frame[y][x] = 0;
 		x = originX;
 		y = originY;
-		switch (currentDirection)
-		{
-		case Direction::UPRIGHT:
-			currentDirection = Direction::DOWNLEFT;
+
+		currentDirection = GetOppositeDirection(currentDirection);
+		Move();
+	}
+}
+
+void Ball::DoubleReflectionCheck(Direction direction)
+{
+	// 이중 반사 확인
+	switch (direction)
+	{
+		// 위, 우측 블록 확인
+		case Ball::Direction::UPRIGHT:
+			if (gameManager.frame[y - 1][x] == 2)
+			{
+				gameManager.frame[y - 1][x] = 0;
+				currentDirection = GetOppositeDirection(originDirection);
+			}
+			else if (gameManager.frame[y][x + 1] == 2)
+			{
+				gameManager.frame[y][x + 1] = 0;
+				currentDirection = GetOppositeDirection(originDirection);
+			}
 			break;
-		case Direction::UPLEFT:
-			currentDirection = Direction::DOWNRIGHT;
+		// 위, 좌측 블록 확인
+		case Ball::Direction::UPLEFT:
+			if (gameManager.frame[y - 1][x] == 2)
+			{
+				gameManager.frame[y - 1][x] = 0;
+				currentDirection = GetOppositeDirection(originDirection);
+			}
+			else if (gameManager.frame[y][x - 1] == 2)
+			{
+				gameManager.frame[y][x - 1] = 0;
+				currentDirection = GetOppositeDirection(originDirection);
+			}
 			break;
-		case Direction::DOWNRIGHT:
-			currentDirection = Direction::UPLEFT;
+		// 아래, 우측 블록 확인
+		case Ball::Direction::DOWNRIGHT:
+			if (gameManager.frame[y + 1][x] == 2)
+			{
+				gameManager.frame[y + 1][x] = 0;
+				currentDirection = GetOppositeDirection(originDirection);
+			}
+			else if (gameManager.frame[y][x + 1] == 2)
+			{
+				gameManager.frame[y][x + 1] = 0;
+				currentDirection = GetOppositeDirection(originDirection);
+			}
 			break;
-		case Direction::DOWNLEFT:
-			currentDirection = Direction::UPRIGHT;
+		// 아래, 좌측 블록 확인
+		case Ball::Direction::DOWNLEFT:
+			if (gameManager.frame[y + 1][x] == 2)
+			{
+				gameManager.frame[y + 1][x] = 0;
+				currentDirection = GetOppositeDirection(originDirection);
+			}
+			else if (gameManager.frame[y][x - 1] == 2)
+			{
+				gameManager.frame[y][x - 1] = 0;
+				currentDirection = GetOppositeDirection(originDirection);
+			}
 			break;
 		default:
 			break;
-		}
-		Move();
 	}
+}
+
+Ball::Direction Ball::GetOppositeDirection(Direction direction)
+{
+	Direction returnDirection;
+	switch (direction)
+	{
+		case Ball::Direction::UPRIGHT:
+			returnDirection = Ball::Direction::DOWNLEFT;
+			break;
+		case Ball::Direction::UPLEFT:
+			returnDirection = Ball::Direction::DOWNRIGHT;
+			break;
+		case Ball::Direction::DOWNRIGHT:
+			returnDirection = Ball::Direction::UPLEFT;
+			break;
+		case Ball::Direction::DOWNLEFT:
+			returnDirection = Ball::Direction::UPRIGHT;
+			break;
+		default:
+			break;
+	}
+	return returnDirection;
 }
