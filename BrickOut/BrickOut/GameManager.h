@@ -13,7 +13,9 @@ private:
 	GameManager(const GameManager& ref) {}
 	GameManager& operator=(const GameManager& ref) {}
 	~GameManager() {}
-	int curStage = 1;
+	int curStage = 2;
+	int score = 0;
+	int totalScore = 0;
 	const int LEN_X = 41; // 가로
 	const int LEN_Y = 30; // 세로
 
@@ -30,6 +32,9 @@ public:
 
 	int GetLENX() const;
 	int GetLENY() const;
+
+	int GetTotalScore() const;
+	void CalcScore(int brokenBrickNum);
 };
 
 #endif // !G_H

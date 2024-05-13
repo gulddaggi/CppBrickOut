@@ -145,3 +145,18 @@ int GameManager::GetLENY() const
 {
 	return LEN_Y;
 }
+
+int GameManager::GetTotalScore() const
+{
+	return totalScore;
+}
+
+void GameManager::CalcScore(int brokenBrickNum)
+{
+	if (brokenBrickNum >= 1)
+	{
+		if (brokenBrickNum > 1) totalScore += 100 + (brokenBrickNum-1) * 10;
+		else totalScore += 100;
+	}
+}
+

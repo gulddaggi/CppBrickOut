@@ -6,6 +6,7 @@ Ball::Ball(int xPos, int yPos)
 	y = yPos;
 	currentDirection = Direction::UPRIGHT;
 	isBallMoving = false;
+	brokenBrickNum = 0;
 	OriginUpdate();
 }
 
@@ -158,6 +159,7 @@ void Ball::WallReflectionCheck()
 		{
 			currentDirection = Direction::UPLEFT;
 		}
+		InitBrokenBrickNum();
 	}
 }
 
@@ -175,6 +177,7 @@ void Ball::BlockReflectionCheck()
 		{
 			currentDirection = Direction::DOWNRIGHT;
 		}
+		AddBrokenBrickNum();
 		DoubleReflectionCheck(originDirection);
 	}
 	// 오른쪽
@@ -189,6 +192,7 @@ void Ball::BlockReflectionCheck()
 		{
 			currentDirection = Direction::DOWNLEFT;
 		}
+		AddBrokenBrickNum();
 		DoubleReflectionCheck(originDirection);
 	}
 	// 위쪽
@@ -203,6 +207,7 @@ void Ball::BlockReflectionCheck()
 		{
 			currentDirection = Direction::DOWNRIGHT;
 		}
+		AddBrokenBrickNum();
 		DoubleReflectionCheck(originDirection);
 	}
 	// 아래쪽
@@ -217,6 +222,7 @@ void Ball::BlockReflectionCheck()
 		{
 			currentDirection = Direction::UPLEFT;
 		}
+		AddBrokenBrickNum();
 		DoubleReflectionCheck(originDirection);
 	}
 	// 왼쪽 위 대각선
@@ -224,24 +230,28 @@ void Ball::BlockReflectionCheck()
 	{
 		gameManager.frame[y - 1][x - 1] = 0;
 		currentDirection = Direction::UPRIGHT;
+		AddBrokenBrickNum();
 	}
 	// 오른쪽 위 대각선
 	else if (gameManager.frame[y - 1][x + 1] == 2 && currentDirection == Direction::UPRIGHT)
 	{
 		gameManager.frame[y - 1][x + 1] = 0;
 		currentDirection = Direction::DOWNRIGHT;
+		AddBrokenBrickNum();
 	}
 	// 왼쪽 아래 대각선
 	else if (gameManager.frame[y + 1][x - 1] == 2 && currentDirection == Direction::DOWNLEFT)
 	{
 		gameManager.frame[y + 1][x - 1] = 0;
 		currentDirection = Direction::DOWNRIGHT;
+		AddBrokenBrickNum();
 	}
 	//오른쪽 아래 대각선
 	else if (gameManager.frame[y + 1][x + 1] == 2 && currentDirection == Direction::DOWNRIGHT)
 	{
 		gameManager.frame[y + 1][x + 1] = 0;
 		currentDirection = Direction::UPRIGHT;
+		AddBrokenBrickNum();
 	}
 }
 
@@ -249,7 +259,12 @@ void Ball::OverlapCheck()
 {
 	if (gameManager.frame[y][x] != 0)
 	{
-		if (gameManager.frame[y][x] == 2) gameManager.frame[y][x] = 0;
+		if (gameManager.frame[y][x] == 2)
+		{
+			gameManager.frame[y][x] = 0;
+			AddBrokenBrickNum();
+		}
+
 		x = originX;
 		y = originY;
 
@@ -269,11 +284,13 @@ void Ball::DoubleReflectionCheck(Direction direction)
 			{
 				gameManager.frame[y - 1][x] = 0;
 				currentDirection = GetOppositeDirection(originDirection);
+				AddBrokenBrickNum();
 			}
 			else if (gameManager.frame[y][x + 1] == 2)
 			{
 				gameManager.frame[y][x + 1] = 0;
 				currentDirection = GetOppositeDirection(originDirection);
+				AddBrokenBrickNum();
 			}
 			break;
 		// 위, 좌측 블록 확인
@@ -282,11 +299,13 @@ void Ball::DoubleReflectionCheck(Direction direction)
 			{
 				gameManager.frame[y - 1][x] = 0;
 				currentDirection = GetOppositeDirection(originDirection);
+				AddBrokenBrickNum();
 			}
 			else if (gameManager.frame[y][x - 1] == 2)
 			{
 				gameManager.frame[y][x - 1] = 0;
 				currentDirection = GetOppositeDirection(originDirection);
+				AddBrokenBrickNum();
 			}
 			break;
 		// 아래, 우측 블록 확인
@@ -295,11 +314,13 @@ void Ball::DoubleReflectionCheck(Direction direction)
 			{
 				gameManager.frame[y + 1][x] = 0;
 				currentDirection = GetOppositeDirection(originDirection);
+				AddBrokenBrickNum();
 			}
 			else if (gameManager.frame[y][x + 1] == 2)
 			{
 				gameManager.frame[y][x + 1] = 0;
 				currentDirection = GetOppositeDirection(originDirection);
+				AddBrokenBrickNum();
 			}
 			break;
 		// 아래, 좌측 블록 확인
@@ -308,11 +329,13 @@ void Ball::DoubleReflectionCheck(Direction direction)
 			{
 				gameManager.frame[y + 1][x] = 0;
 				currentDirection = GetOppositeDirection(originDirection);
+				AddBrokenBrickNum();
 			}
 			else if (gameManager.frame[y][x - 1] == 2)
 			{
 				gameManager.frame[y][x - 1] = 0;
 				currentDirection = GetOppositeDirection(originDirection);
+				AddBrokenBrickNum();
 			}
 			break;
 		default:
@@ -342,3 +365,20 @@ Ball::Direction Ball::GetOppositeDirection(Direction direction)
 	}
 	return returnDirection;
 }
+
+int Ball::GetBrokenBrickNum() const
+{
+	return brokenBrickNum;
+}
+
+void Ball::InitBrokenBrickNum()
+{
+	brokenBrickNum = 0;
+}
+
+void Ball::AddBrokenBrickNum()
+{
+	++brokenBrickNum;
+	gameManager.CalcScore(brokenBrickNum);
+}
+
