@@ -34,12 +34,12 @@ private:
 public:
 	Ball(int xPos, int yPos);
 
+	void Init();
+
 	int GetX();
 	int GetY();
 	void MoveRight();
 	void MoveLeft();
-
-	bool GameOverCheck();
 
 	void Shoot(Direction direction);
 

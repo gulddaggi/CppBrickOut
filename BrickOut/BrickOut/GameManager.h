@@ -13,9 +13,13 @@ private:
 	GameManager(const GameManager& ref) {}
 	GameManager& operator=(const GameManager& ref) {}
 	~GameManager() {}
-	int curStage = 2;
+	int curStage = 1;
 	int score = 0;
 	int totalScore = 0;
+	int brickCount = 0;
+	bool isStageClear = false;
+	bool isGameClear = false;
+	bool isGameOver = false;
 	const int LEN_X = 41; // 가로
 	const int LEN_Y = 30; // 세로
 
@@ -29,12 +33,21 @@ public:
 	void DrawStage2(Ball& ball, Bar& bar);
 
 	void StageClear();
-
+	void GameClear();
+	void GameOver();
+	
 	int GetLENX() const;
 	int GetLENY() const;
 
 	int GetTotalScore() const;
 	void CalcScore(int brokenBrickNum);
+
+	void DecreaseBrickCount();
+	int GetBrickCount() const;
+
+	bool GetIsStageClear() const;
+	bool GetIsGameClear() const;
+	bool GetIsGameOver() const;
 };
 
 #endif // !G_H

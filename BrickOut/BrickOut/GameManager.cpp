@@ -9,6 +9,8 @@ GameManager& GameManager::getInstance() {
 
 void GameManager::DrawStage(Ball& ball, Bar& bar)
 {
+	isStageClear = false;
+
 	switch (curStage)
 	{
 		case 1:
@@ -52,6 +54,7 @@ void GameManager::DrawStage1(Ball& ball, Bar& bar)
 			if (i % 2 == 1) break;
 			
 			frame[i][j] = 2;
+			++brickCount;
 		}
 	}
 
@@ -67,12 +70,15 @@ void GameManager::DrawStage1(Ball& ball, Bar& bar)
 
 void GameManager::DrawStage2(Ball& ball, Bar& bar)
 {
+	isStageClear = false;
+
 	// 초기화
-	frame.clear();
 	for (int i = 0; i < LEN_Y; i++)
 	{
-		std::vector<int> row(LEN_X, 0);
-		frame.push_back(row);
+		for (int j = 0; j < LEN_X; j++)
+		{
+			frame[i][j] = 0;
+		}
 	}
 
 	// 채울 좌표 지정
@@ -97,12 +103,14 @@ void GameManager::DrawStage2(Ball& ball, Bar& bar)
 		if (count == 1)
 		{
 			frame[i][mid] = 2;
+			++brickCount;
 		}
 		else
 		{
 			for (int j = mid - count/2; j <= mid + count/2; j++)
 			{
 				frame[i][j] = 2;
+				++brickCount;
 			}
 		}
 
@@ -124,17 +132,15 @@ void GameManager::DrawStage2(Ball& ball, Bar& bar)
 
 	// 공
 	frame[ball.GetY()][ball.GetX()] = 3;
-
 }
 
 void GameManager::StageClear()
 {
-	if (curStage < 2)
+	if (curStage <= 2)
 	{
 		++curStage;
 	}
 }
-
 
 int GameManager::GetLENX() const
 {
@@ -160,3 +166,44 @@ void GameManager::CalcScore(int brokenBrickNum)
 	}
 }
 
+void GameManager::DecreaseBrickCount()
+{
+	if (brickCount != 0) --brickCount;
+
+	if (brickCount == 0)
+	{
+		isStageClear = true;
+		++curStage;
+		if (curStage > 2) isGameClear = true;
+	}
+}
+
+int GameManager::GetBrickCount() const
+{
+	return brickCount;
+}
+
+bool GameManager::GetIsStageClear() const
+{
+	return isStageClear;
+}
+
+bool GameManager::GetIsGameClear() const
+{
+	return isGameClear;
+}
+
+bool GameManager::GetIsGameOver() const
+{
+	return isGameOver;
+}
+
+void GameManager::GameClear()
+{
+	isGameClear = true;
+}
+
+void GameManager::GameOver()
+{
+	isGameOver = true;
+}

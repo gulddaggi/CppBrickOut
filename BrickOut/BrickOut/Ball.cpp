@@ -10,6 +10,17 @@ Ball::Ball(int xPos, int yPos)
 	OriginUpdate();
 }
 
+void Ball::Init()
+{
+	x = gameManager.GetLENX() / 2;
+	y = gameManager.GetLENY() - 2;
+	currentDirection = Direction::UPRIGHT;
+	isBallMoving = false;
+	brokenBrickNum = 0;
+	OriginUpdate();
+	InitBrokenBrickNum();
+}
+
 int Ball::GetX()
 {
 	return x;
@@ -28,18 +39,6 @@ void Ball::MoveRight()
 void Ball::MoveLeft()
 {
 	--x;
-}
-
-bool Ball::GameOverCheck()
-{
-	if (y == LEN_Y - 1)
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
 }
 
 void Ball::ReflectionCheck()
@@ -81,6 +80,11 @@ void Ball::Move()
 
 	OverlapCheck();
 	OriginUpdate();
+
+	if (y == LEN_Y - 1)
+	{
+		gameManager.GameOver();
+	}
 }
 
 void Ball::OriginUpdate()
@@ -379,6 +383,7 @@ void Ball::InitBrokenBrickNum()
 void Ball::AddBrokenBrickNum()
 {
 	++brokenBrickNum;
+	gameManager.DecreaseBrickCount();
 	gameManager.CalcScore(brokenBrickNum);
 }
 
