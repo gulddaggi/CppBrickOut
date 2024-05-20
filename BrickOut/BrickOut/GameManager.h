@@ -20,8 +20,8 @@ private:
 	bool isStageClear = false;
 	bool isGameClear = false;
 	bool isGameOver = false;
-	const int LEN_X = 41; // 가로
-	const int LEN_Y = 30; // 세로
+	const int LEN_X = 28; // 가로
+	const int LEN_Y = 26; // 세로
 
 public:
 	std::vector<std::vector<int>> frame; // 접근 : frame[y][x]
@@ -42,12 +42,14 @@ public:
 	int GetTotalScore() const;
 	void CalcScore(int brokenBrickNum);
 
-	void DecreaseBrickCount();
+	void UpdateBrickCount(int value);
 	int GetBrickCount() const;
 
 	bool GetIsStageClear() const;
 	bool GetIsGameClear() const;
 	bool GetIsGameOver() const;
+
+	void Restart(Ball& ball, Bar& bar);
 };
 
 #endif // !G_H

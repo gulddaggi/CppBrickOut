@@ -8,12 +8,15 @@ Ball::Ball(int xPos, int yPos)
 	isBallMoving = false;
 	brokenBrickNum = 0;
 	OriginUpdate();
+
+	xInit = x;
+	yInit = y;
 }
 
 void Ball::Init()
 {
-	x = gameManager.GetLENX() / 2;
-	y = gameManager.GetLENY() - 2;
+	x = xInit;
+	y = yInit;
 	currentDirection = Direction::UPRIGHT;
 	isBallMoving = false;
 	brokenBrickNum = 0;
@@ -81,7 +84,7 @@ void Ball::Move()
 	OverlapCheck();
 	OriginUpdate();
 
-	if (y == LEN_Y - 1)
+	if (y == gameManager.GetLENY() - 1)
 	{
 		gameManager.GameOver();
 	}
@@ -108,35 +111,39 @@ void Ball::WallReflectionCheck()
 		if (currentDirection == Direction::UPLEFT)
 		{
 			currentDirection = Direction::UPRIGHT;
+
+			// 위쪽 벽 복수충돌
+			if (y == 1)
+			{
+				currentDirection = Direction::DOWNRIGHT;
+			}
+
 		}
 		else if (currentDirection == Direction::DOWNLEFT)
 		{
 			currentDirection = Direction::DOWNRIGHT;
 		}
 
-		// 위쪽 벽 복수충돌
-		if (y == 1)
-		{
-			currentDirection = Direction::DOWNRIGHT;
-		}
 	}
 	// 오른쪽 벽
-	else if (x == LEN_X - 2)
+	else if (x == gameManager.GetLENX() - 2)
 	{
 		if (currentDirection == Direction::UPRIGHT)
 		{
 			currentDirection = Direction::UPLEFT;
+
+			// 위쪽 벽 복수충돌
+			if (y == 1)
+			{
+				currentDirection = Direction::DOWNLEFT;
+			}
 		}
 		else if (currentDirection == Direction::DOWNRIGHT)
 		{
 			currentDirection = Direction::DOWNLEFT;
 		}
 
-		// 위쪽 벽 복수충돌
-		if (y == 1)
-		{
-			currentDirection = Direction::DOWNLEFT;
-		}
+
 	}
 	// 위쪽 벽
 	else if (y == 1)
@@ -152,7 +159,7 @@ void Ball::WallReflectionCheck()
 	}
 
 	// 발판
-	if (y == LEN_Y - 2 &&
+	if (y == gameManager.GetLENY() - 2 &&
 	(GameManager::getInstance().frame[y + 1][x] == 1 || GameManager::getInstance().frame[y + 1][x - 1] == 1 || GameManager::getInstance().frame[y + 1][x + 1] == 1))
 	{
 		if (currentDirection == Direction::DOWNRIGHT)
@@ -233,7 +240,7 @@ void Ball::BlockReflectionCheck()
 	else if (gameManager.frame[y - 1][x - 1] == 2 && currentDirection == Direction::UPLEFT)
 	{
 		gameManager.frame[y - 1][x - 1] = 0;
-		currentDirection = Direction::UPRIGHT;
+		currentDirection = Direction::DOWNLEFT;
 		AddBrokenBrickNum();
 	}
 	// 오른쪽 위 대각선
@@ -383,7 +390,6 @@ void Ball::InitBrokenBrickNum()
 void Ball::AddBrokenBrickNum()
 {
 	++brokenBrickNum;
-	gameManager.DecreaseBrickCount();
 	gameManager.CalcScore(brokenBrickNum);
 }
 

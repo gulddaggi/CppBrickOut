@@ -6,14 +6,17 @@ Bar::Bar(int size, int middle, int yPos)
 	left = middle - (size / 2) - 1;
 	right = middle + (size / 2);
 	y = yPos;
+
+	leftInit = left;
+	rightInit = right;
+	yInit = y;
 }
 
 void Bar::Init()
 {
-	int middle = gameManager.GetLENX() / 2 + 1;
-	left = middle - (length / 2) - 1;
-	right = middle + (length / 2);
-	y = gameManager.GetLENY() - 1;
+	left = leftInit;
+	right = rightInit;
+	y = yInit;
 	isBallOnTheBar = true;
 	isWallOnSide = false;
 }
@@ -66,7 +69,7 @@ void Bar::MoveLeft()
 
 void Bar::MoveRight()
 {
-	if (right != LEN_X - 1)
+	if (right != gameManager.GetLENX() - 1)
 	{
 		isWallOnSide = false;
 		++left;

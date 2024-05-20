@@ -166,9 +166,10 @@ void GameManager::CalcScore(int brokenBrickNum)
 	}
 }
 
-void GameManager::DecreaseBrickCount()
+void GameManager::UpdateBrickCount(int value)
 {
-	if (brickCount != 0) --brickCount;
+	brickCount = 0;
+	brickCount = value;
 
 	if (brickCount == 0)
 	{
@@ -206,4 +207,50 @@ void GameManager::GameClear()
 void GameManager::GameOver()
 {
 	isGameOver = true;
+}
+
+void GameManager::Restart(Ball& ball, Bar& bar)
+{
+	ball.Init();
+	bar.Init();
+	curStage = 1;
+	score = 0;
+	totalScore = 0;
+	brickCount = 0;
+	isStageClear = false;
+	isGameClear = false;
+	isGameOver = false;
+
+	// 채울 좌표 지정
+	// 테두리
+	for (int i = 0; i < LEN_Y; i++)
+	{
+		for (int j = 0; j < LEN_X; j++)
+		{
+			if (i == 0 || j == 0 || j == LEN_X - 1) frame[i][j] = 1;
+			else frame[i][j] = 0;
+		}
+	}
+
+	// 블록
+	for (int i = 3; i < 11; i++)
+	{
+		for (int j = 1; j < LEN_X - 1; j++)
+		{
+			if (i % 2 == 1) break;
+
+			frame[i][j] = 2;
+			++brickCount;
+		}
+	}
+
+	// 발판
+	for (int i = bar.GetLeft(); i < bar.GetRight(); i++)
+	{
+		frame[bar.GetY()][i] = 1;
+	}
+
+	// 공
+	frame[ball.GetY()][ball.GetX()] = 3;
+
 }

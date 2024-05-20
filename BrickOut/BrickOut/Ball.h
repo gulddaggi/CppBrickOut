@@ -14,6 +14,9 @@ public:
 	};
 
 private:
+	int xInit;
+	int yInit;
+
 	int x;
 	int y;
 	bool isBallMoving;
@@ -21,9 +24,6 @@ private:
 	int originY;
 	GameManager& gameManager = GameManager::getInstance();
 	int brokenBrickNum;
-
-	const int LEN_X = 41; // 가로
-	const int LEN_Y = 30; // 세로
 
 	Direction currentDirection;
 	Direction originDirection;

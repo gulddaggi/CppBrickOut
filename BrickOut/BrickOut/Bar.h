@@ -4,6 +4,10 @@
 class Bar
 {
 private:
+	int leftInit;
+	int rightInit;
+	int yInit;
+
 	int left;
 	int right;
 	int y;
@@ -11,8 +15,6 @@ private:
 	bool isBallOnTheBar = true;
 	bool isWallOnSide = false;
 	GameManager& gameManager = GameManager::getInstance();
-	const int LEN_X = 41; // 가로
-	const int LEN_Y = 30; // 세로
 
 public:
 	Bar(int size, int middle, int yPos);
